@@ -1,4 +1,5 @@
-# 🏢 Real Estate Property RAG System
+# 🏢 Real Estate Property RAG System 
+**Live Demo**: [Real Estate AI Assistant](https://rag-property-assistant.streamlit.app/) https://rag-property-assistant.streamlit.app/ with Fast API deployed on AWS using Docker  
 
 An intelligent Real Estate AI Assistant powered by Retrieval-Augmented Generation (RAG) using Google's Gemini AI, LangChain, and FAISS vector database and SQL lite **performing hybrid searching**.
 
