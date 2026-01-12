@@ -13,7 +13,7 @@ from typing import Optional, Dict, Any
 
 # --- Page Configuration ---
 st.set_page_config(
-    page_title="Real Estate AI Assistant (FastAPI)",
+    page_title="Real Estate RAG AI Assistant (FastAPI)",
     page_icon="🏢",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -83,11 +83,11 @@ with st.sidebar:
     
     st.markdown("""
     ### 💡 Example Queries
-    - "3BHK flats with lift in Yashvant Seth Jadhav Marg"
-    - "List projects near Subhash Nagar with lift"
-    - "Show apartments under 1 crore with parking"
+    - "1BHK budget properties under 15 lakhs near schools"
+    - "3BHK apartments in Chembur under 3 crore"
+    - "Commercial office spaces in Andheri East over 200 sqft"
     - "Properties with gym and swimming pool"
-    - "Affordable 2BHK apartments with parking"
+    - "recommend some office locations"
     """)
     
     st.divider()
@@ -117,9 +117,9 @@ if "api_healthy" not in st.session_state:
 
 st.title("🏢 Real Estate AI Assistant")
 st.markdown("""
-**Powered by FastAPI · FAISS Vector Search · Gemini LLM , A Full GEN AI APP**
+**Powered by FastAPI · FAISS Vector Search · Gemini LLM , A Gen AI APP supporting hybrid searching**
 
-Ask me anything about available properties!
+Ask me anything about available properties! [dataset](https://drive.google.com/file/d/1G0JoUTDYL3hmAVdtBTTdKR8a3eCmlR8E/view?usp=sharing)
 
 **📌 Important Notes:**
 - Personal project with **free tier API limits** (daily usage restrictions)

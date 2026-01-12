@@ -4,7 +4,7 @@ An intelligent Real Estate AI Assistant powered by Retrieval-Augmented Generatio
 
 # its video demo link 
 
-https://drive.google.com/file/d/1bPgdx2YVzpsqA1L_wZyj5MQ0FBBUTjYO/view?usp=sharing
+https://drive.google.com/file/d/1bPgdx2YVzpsqA1L_wZyj5MQ0FBBUTjYO/view?usp=sharing (Older version)
 
 ## ⚠️ IMPORTANT: Live Application Notice
 
@@ -24,7 +24,7 @@ This application is **currently live and deployed on AWS EC2**. Please use it **
 
 This project implements a conversational AI assistant that helps users find real estate properties based on natural language queries. It uses advanced embedding techniques and semantic search to match user requirements with available properties in a cleaned, merged database.
 
-**Live Demo**: [Real Estate AI Assistant](http://) 
+**Live Demo**: [Real Estate AI Assistant](https://rag-property-chatbot.streamlit.app/) with Fast API deployed on AWS using Docker 
 
 ## ✨ Features
 
