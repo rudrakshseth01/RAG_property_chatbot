@@ -22,8 +22,7 @@ st.set_page_config(
 # --- Load environment ---
 load_dotenv()
 DEFAULT_FASTAPI_URL = st.secrets.get(
-    "FASTAPI_URL",
-    "http://localhost:8000"
+    "FASTAPI_URL"
 )
 
 # For deployed version, create .env in root with:
