@@ -4,7 +4,7 @@ A production-ready FastAPI backend for AI-powered real estate property search us
 
 ## ⚠️ LIVE DEPLOYMENT NOTICE
 
-This API is **currently deployed on AWS EC2 with use of Docker** and available online at: `https://rag-property-chatbot.streamlit.app/`
+This API is **currently deployed on AWS EC2 with use of Docker** and available online at: `https://rag-property-assistant.streamlit.app/`
 And the Screenshots for the API endpoints are in the SCREENSHOT Folder
 **Please use ethically and responsibly:**
 - ✅ Legitimate property search queries
