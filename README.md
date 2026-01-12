@@ -37,20 +37,22 @@ This project implements a conversational AI assistant that helps users find real
 - **⚙️ Customizable**: Adjustable model parameters (temperature, retrieval count)
 - **📈 Batch Processing**: Efficient embedding generation with rate limiting
 - **🧹 Data Pipeline**: Automated data cleaning and merging process
+- **⚡ Asynchronous Architecture**: Fully async FastAPI implementation for high-performance concurrent request handling and non-blocking operations
 - **✅ No Hallucination Guarantee**: Only answers based on database records - if a query is outside the real estate data, the system provides a specific explanation instead of fabricating answers
 - **🔬 Robust Prompt Engineering**: LangSmith integration for continuous prompt optimization, testing, and monitoring to ensure reliable, accurate responses
 
 ## 🛠️ Tech Stack
 
 - **AI/ML**: Google Gemini (gemini-2.5-flash, gemini-embedding-001)
-- **Backend**: FastAPI + Uvicorn
+- **Backend**: FastAPI + Uvicorn (fully asynchronous)
 - **Frontend**: Streamlit
 - **Vector Search**: FAISS (CPU)
-- **Database**: SQLite
+- **Database**: SQLite (with async queries)
 - **Data Processing**: Pandas, NumPy
 - **Deployment**: Docker, AWS EC2
 - **Framework**: LangChain
 - **Prompt Engineering & Monitoring**: LangSmith (for robust prompt optimization and hallucination prevention)
+- **Architecture**: Asynchronous Python with async/await for concurrent request handling
 - **Environment**: Python 3.11+
 - **Version Control**: Git + GitHub
 
