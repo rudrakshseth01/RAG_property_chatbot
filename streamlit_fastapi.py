@@ -115,9 +115,9 @@ if "messages" not in st.session_state:
 if "api_healthy" not in st.session_state:
     st.session_state.api_healthy = False
 
-st.title("🏢 Real Estate AI Assistant")
+st.title("🏢 Real Estate RAG AI Assistant")
 st.markdown("""
-**Powered by FastAPI · FAISS Vector Search · Gemini LLM , A Gen AI APP supporting hybrid searching**
+**Powered by FastAPI · FAISS Vector Search · Gemini LLM (A Gen AI APP supporting hybrid searching)**
 
 Ask me anything about available properties! [dataset](https://drive.google.com/file/d/1G0JoUTDYL3hmAVdtBTTdKR8a3eCmlR8E/view?usp=sharing)
 
