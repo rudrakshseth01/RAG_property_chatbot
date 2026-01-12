@@ -7,9 +7,25 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 import os
 from dotenv import load_dotenv
+import sqlite3
+
+load_dotenv()
+
+# --- Fix for asyncio event loop error in Streamlit (FAISS/LangChain) ---
+import asyncio
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
+if os.getenv("LANGSMITH_API_KEY"):
+    os.environ["LANGSMITH_TRACING"] = "true"
+    print("LangSmith tracing enabled")
+else:
+    print("LangSmith API key not found. To enable tracing, set LANGSMITH_API_KEY in .env")
+
 
 # Pydantic Models for Structured Output
-
 
 class PropertyMatch(BaseModel):
     id: str = Field(..., description="Unique property ID, with column name unique_property_id")
@@ -26,6 +42,53 @@ class RAGAnswer(BaseModel):
     matching_projects: List[PropertyMatch] = Field(default_factory=list)
     unmatched_points: List[str] = Field(default_factory=list)
     explanation: str = Field(..., description="Reasoning or context explanation")
+    min_price: Optional[int] = Field(None, description="Minimum price constraint from query in INR")
+    max_price: Optional[int] = Field(None, description="Maximum price constraint from query in INR")
+    sort_by: Optional[str] = Field(None, description="Sorting preference: 'price_asc', 'price_desc', or None")
+
+#sql filtering
+
+def sql_filter_with_ids(
+    property_ids: list[str],
+    min_price: int | None = None,
+    max_price: int | None = None,
+    sort_by: str | None = None
+):
+    """Filter properties by ID list and price constraints, then sort."""
+    if not property_ids:
+        return []
+
+    placeholders = ",".join(["?"] * len(property_ids))
+    query = f"""
+        SELECT *
+        FROM properties
+        WHERE unique_property_id IN ({placeholders})
+    """
+
+    params = list(property_ids)
+    conditions = []
+
+    if min_price is not None:
+        conditions.append("price >= ?")
+        params.append(min_price)
+
+    if max_price is not None:
+        conditions.append("price <= ?")
+        params.append(max_price)
+
+    if conditions:
+        query += " AND " + " AND ".join(conditions)
+
+    if sort_by == "price_asc":
+        query += " ORDER BY price ASC"
+    elif sort_by == "price_desc":
+        query += " ORDER BY price DESC"
+
+    conn = sqlite3.connect("properties_sql.db")
+    rows = conn.execute(query, params).fetchall()
+    conn.close()
+
+    return rows
 
 
 # Page Configuration
@@ -52,7 +115,7 @@ with st.sidebar:
     # Model Selection
     model_name = st.selectbox(
         "Select Model",
-        ["gemini-2.5-flash-lite"],
+        ["gemini-2.5-flash"],
         index=0
     )
     
@@ -60,8 +123,8 @@ with st.sidebar:
     k_results = st.slider(
         "Number of Retrieved Properties",
         min_value=3,
-        max_value=10,
-        value=5,
+        max_value=40,
+        value=10,
         help="How many similar properties to retrieve from the database"
     )
     
@@ -92,9 +155,6 @@ with st.sidebar:
     - "Properties with gym and swimming pool"
     """)
 
-# ============================================
-# Initialize Session State
-# ============================================
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -147,6 +207,13 @@ Your job:
 3. If some query conditions are not met, list them under `unmatched_points`.
 4. Never assume data not present in the retrieved context.
 5. If nothing matches, leave `matching_projects` empty and explain why.
+6. If there is a limit for price range, extract it and convert to INR:
+   - "under 50 lakh" → max_price: 5000000
+   - "30-50 crore" → min_price: 300000000, max_price: 500000000
+7. Extract sort preference:
+   - Look for "cheapest", "affordable", "budget", "lowest" → sort_by: "price_asc"
+   - Look for "premium", "luxury", "expensive", "highest" → sort_by: "price_desc"
+   - Otherwise leave sort_by as null
 
 ---
 Retrieved Property Data:
@@ -197,6 +264,51 @@ def process_query(query, db, api_key, model_name, temperature, k_results):
         # Get response
         response = rag_chain.invoke(input_data)
         
+        # Stage 2: SQL Filtering - Apply price and sorting constraints
+        matched_ids = [prop.id for prop in response.matching_projects if getattr(prop, "id", None)]
+        
+        if not matched_ids:
+            # No properties matched the RAG filter
+            return response, results
+        else:
+            # Apply SQL filtering using values extracted by LLM
+            final_results = sql_filter_with_ids(
+                property_ids=matched_ids,
+                min_price=response.min_price,
+                max_price=response.max_price,
+                sort_by=response.sort_by
+            )
+            
+            final_matching_ids = [row[0] for row in final_results]  # First column is unique_property_id
+            
+            # Filter matching_projects to only include those that passed SQL filter
+            original_count = len(response.matching_projects)
+            response.matching_projects = [
+                prop for prop in response.matching_projects 
+                if prop.id in final_matching_ids
+            ]
+            
+            # Sort matching_projects based on final_results order
+            if response.sort_by:
+                id_to_prop = {prop.id: prop for prop in response.matching_projects}
+                response.matching_projects = [id_to_prop[prop_id] for prop_id in final_matching_ids if prop_id in id_to_prop]
+            
+            # Update explanation if SQL filtering reduced results
+            filtered_count = len(response.matching_projects)
+            if filtered_count < original_count:
+                price_msg = ""
+                if response.min_price and response.max_price:
+                    price_msg = f" within price range ₹{response.min_price:,} - ₹{response.max_price:,}"
+                elif response.min_price:
+                    price_msg = f" with price above ₹{response.min_price:,}"
+                elif response.max_price:
+                    price_msg = f" with price below ₹{response.max_price:,}"
+                
+                if filtered_count == 0:
+                    response.explanation += f"\n\n⚠️ Note: {original_count} properties matched your requirements, but none were found{price_msg}."
+                else:
+                    response.explanation += f"\n\n💡 Note: {original_count} properties matched initially, but only {filtered_count} properties were found{price_msg}."
+        
         return response, results
     
     except Exception as e:
@@ -232,6 +344,22 @@ def display_property_card(prop: PropertyMatch):
 
 def display_response(response: RAGAnswer, results):
     """Display the complete RAG response"""
+    
+    # Show filter information if price constraints were applied
+    if response.min_price or response.max_price or response.sort_by:
+        filter_info = "🔍 **Applied Filters:** "
+        filters = []
+        if response.min_price:
+            filters.append(f"Min Price: ₹{response.min_price:,}")
+        if response.max_price:
+            filters.append(f"Max Price: ₹{response.max_price:,}")
+        if response.sort_by == "price_asc":
+            filters.append("Sorted: Lowest to Highest Price")
+        elif response.sort_by == "price_desc":
+            filters.append("Sorted: Highest to Lowest Price")
+        
+        if filters:
+            st.info(filter_info + " | ".join(filters))
     
     # Matching Projects
     st.markdown("### ✅ Matching Projects")

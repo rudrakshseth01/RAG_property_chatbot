@@ -1,3 +1,51 @@
+# Environment
 .env
 *.env
+.venv/
 venv/
+env/
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.cache/
+
+# Build / distribution
+build/
+dist/
+*.egg-info/
+*.spec
+
+# Coverage / reports
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# Database & generated files
+*.db
+*.sqlite
+*.sqlite3
+properties_sql.db
+
+# FAISS indices (optional - uncomment if not tracking)
+# faiss_realestate_index/
+
+# IDE / editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store

@@ -1,0 +1,17 @@
+# FastAPI Requirements
+fastapi
+uvicorn
+pydantic
+python-multipart
+LangSmith
+# Core dependencies (from main project)
+python-dotenv
+langchain
+langchain-community
+langchain-core
+langchain-google-genai
+faiss-cpu
+google-generativeai
+
+# Additional utilities
+aiofiles

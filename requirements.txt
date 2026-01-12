@@ -5,7 +5,7 @@ pandas
 numpy
 tqdm
 scikit-learn
-
+LangSmith
 # --- Streamlit Frontend ---
 streamlit
 streamlit-option-menu

@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+fastenv/
+venv/
+env/
+ENV/
+.venv/
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# MyPy
+.mypy_cache/
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+properties_sql.db
+
+# FAISS indices (optional - uncomment if not tracking)
+# faiss_realestate_index/
+index.faiss
+
+# Production artifacts
+*.whl
+*.tar.gz
