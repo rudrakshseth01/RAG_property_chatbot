@@ -1,6 +1,6 @@
 # 🏢 Real Estate Property RAG System
 
-An intelligent Real Estate AI Assistant powered by Retrieval-Augmented Generation (RAG) using Google's Gemini AI, LangChain, and FAISS vector database.
+An intelligent Real Estate AI Assistant powered by Retrieval-Augmented Generation (RAG) using Google's Gemini AI, LangChain, and FAISS vector database and SQL lite **performing hybrid searching**.
 
 # its video demo link 
 
@@ -36,6 +36,8 @@ This project implements a conversational AI assistant that helps users find real
 - **⚙️ Customizable**: Adjustable model parameters (temperature, retrieval count)
 - **📈 Batch Processing**: Efficient embedding generation with rate limiting
 - **🧹 Data Pipeline**: Automated data cleaning and merging process
+- **✅ No Hallucination Guarantee**: Only answers based on database records - if a query is outside the real estate data, the system provides a specific explanation instead of fabricating answers
+- **🔬 Robust Prompt Engineering**: LangSmith integration for continuous prompt optimization, testing, and monitoring to ensure reliable, accurate responses
 
 ## 🛠️ Tech Stack
 
@@ -47,6 +49,7 @@ This project implements a conversational AI assistant that helps users find real
 - **Data Processing**: Pandas, NumPy
 - **Deployment**: Docker, AWS EC2
 - **Framework**: LangChain
+- **Prompt Engineering & Monitoring**: LangSmith (for robust prompt optimization and hallucination prevention)
 - **Environment**: Python 3.11+
 - **Version Control**: Git + GitHub
 
@@ -612,6 +615,7 @@ Contributions welcome! Please:
 - **Gemini AI** for LLM and embeddings
 - **FAISS** for vector search
 - **LangChain** for RAG framework
+- **LangSmith** for prompt engineering, testing, and monitoring - enabling robust, hallucination-free responses through continuous optimization
 - **FastAPI** for production API
 - **Streamlit** for interactive UI
 
