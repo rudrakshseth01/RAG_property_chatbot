@@ -7,7 +7,7 @@ tqdm
 scikit-learn
 LangSmith
 # --- Streamlit Frontend ---
-streamlit
+streamlit==1.32.2
 streamlit-option-menu
 
 # --- LLM & Embeddings ---
