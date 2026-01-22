@@ -31,6 +31,7 @@ sqlite-utils
 pydantic
 tenacity
 lxml
+altair==4.2.2
 
 # --- Optional  ---
 ipykernel
